@@ -54,6 +54,43 @@ Add tcp 80 and udp 123 to aws lightsail
 
 8. Create an SSH key pair for grader using the ssh-keygen tool
 
+On locale machine run:
+
+`ssh-keygen`
+
+Enter a file name and save key to `~/.ssh`
+
+Copy the key from `cat ~/.ssh/grader_key.pub`
+
+Login to vm as user grader
+
+On graders vm:
+
+Create directory `sudo mkdir .ssh`
+
+`sudo nano ~/.ssh/authorized_keys`
+
+Paste key from local machine, save, and exit
+
+Change permissions:
+
+`sudo chmod 700 .ssh`
+
+`sudo chmod 644 .ssh/authorized_keys`
+
+`sudo chown grader:grader .ssh`
+
+`sudo chown grader:grader .ssh/authorized_keys`
+
+Set PasswordAuthentication to no:
+
+`sudo nano /etc/ssh/sshd_config`
+
+`sudo service ssh restart`
+
+Login as grader from locale machine: 
+`ssh -i ~/.ssh/grader_key grader@35.178.249.129 -p 2200`
+
 9. Configure the local timezone to UTC.
 
 `$ sudo dpkg-reconfigure tzdata`
