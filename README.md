@@ -286,7 +286,16 @@ To make .git directory not publicly accessible, put this in an .htaccess file at
 `RedirectMatch 404 /\.git`
 
 
+### Resources:
 
+[http://httpd.apache.org/docs/current/mod/core.html#virtualhost](http://httpd.apache.org/docs/current/mod/core.html#virtualhost/)
+[https://www.digitalocean.com/community/tutorials/how-to-deploy-a-flask-application-on-an-ubuntu-vps](https://www.digitalocean.com/community/tutorials/how-to-deploy-a-flask-application-on-an-ubuntu-vps)
+[Deploying python Flask web app on Amazon Lightsail](https://hk.saowen.com/a/0a0048ca7141440d0553425e8df46b16cdf4c13f50df4c5888256393d34bb1b9)
+[Make .git directory web inaccessible](https://stackoverflow.com/questions/6142437/make-git-directory-web-inaccessible)
+[Python locale error: unsupported locale setting
+](https://stackoverflow.com/questions/14547631/python-locale-error-unsupported-locale-setting)
+[How To Install and Use PostgreSQL on Ubuntu 16.04](https://www.digitalocean.com/community/tutorials/how-to-install-and-use-postgresql-on-ubuntu-16-04)
+[The pg_hba.conf File](https://www.postgresql.org/docs/9.5/static/auth-pg-hba-conf.html)
 
 
 
