@@ -2,11 +2,11 @@
 
 ## Server 
 
-IP address: 18.130.76.28
+IP address: 18.130.170.135
 
 SSH Port: 2200
 
-URL: [ec2-18-130-76-28.eu-west-2.compute-amazonaws.com](http://ec2-18-130-76-28.eu-west-2.compute.amazonaws.com/)
+URL: [ec2-18-130-170-135.eu-west-2.compute-amazonaws.com](http://ec2-18-130-170-135.eu-west-2.compute.amazonaws.com/)
 
 username/password for udacity reviewer: grader/grader
 
@@ -24,7 +24,7 @@ Create
 #### 2. SSH into server
 
 Go to "Account" -> "SSH Keys" and download the ssh key to your directory /.ssh (name it lightsail-key.pem)
-SSH into server with `$ ssh -i ~/.ssh/lightsail-key.pem ubuntu 18.130.76.28`
+SSH into server with `$ ssh -i ~/.ssh/lightsail-key.pem ubuntu 18.130.170.135`
 
 
 ### Secure your server
@@ -101,11 +101,11 @@ Check if grader is in sudoers:
 
 On local machine:
 
-`$ ssh-keygen` -> name it `grader-key`
+`$ ssh-keygen` -> name it `grader_key`
 
 Print key to terminal:
 
-`$ cat grader-key.pub` and COPY it.
+`$ cat grader_key.pub` and COPY it.
 
 On VM:
 
@@ -127,6 +127,10 @@ Forcing key based authentication:
 
 Restart ssh: `$ sudo service ssh restart`
 
+Now login as grader is possible, on local machine type:
+
+`$ sudo ssh -i ~/.ssh/grader_key grader@18.130.170.135 -p 2200`
+
 
 #### 9. Configure the local timezone to UTC.
 
@@ -139,14 +143,16 @@ Restart ssh: `$ sudo service ssh restart`
 
 Visit `18.130.76.28` to check if Apache2 Ubuntu Default Page is showing up.
 
-`$ sudo apt-get install libapache2-mod-wsgi`
+`$ sudo apt-get install libapache2-mod-wsgi python-setuptools`
 
 Enable wsgi: `$ sudo a2enmod wsgi`
+
+`$ sudo service apache2 restart`
 
 
 #### 11. Install and configure PostgreSQL
 
-`$ sudo apt-get install postgresql`
+`$ sudo apt-get install postgresql python-psycopg2`
 
 Remote connections should not be allowed:
 
@@ -179,7 +185,7 @@ Give user catalog CREATEDB permission:
 
 Give user catalog permissions on database catalog:
 
-`# GRANT ALL ON DATABASE catalog TO catalog;`
+`# GRANT ALL PRIVILEGES ON DATABASE catalog TO catalog;`
 
 `# \q` to close psql
 
@@ -220,7 +226,7 @@ From `/var/www/catalog/catalog`:
 
 `$ sudo pip install passlib`
 
-`$ sudo pip install psycopg2`
+`$ sudo pip install psycopg2-binary`
 
 
 Change in `views.py`: 
@@ -229,25 +235,30 @@ if __name__ == '__main__':
   app.run()
 ```
 
-Change in `database_setup.py` and in `dummy-db.py`:
+Change in `database_setup.py`, in `views.py`, and in `dummy-db.py`:
 Exchange `sqlite:///usersCatalog.db` with `postgresql://catalog:password@localhost/catalog`
 
+Create a database: `$ sudo python database_setup.py`
+Add data: `$ sudo python dummy-db.py`
 
-Create a WSGI file:
+#### Create a WSGI file:
 
 In /var/www/catalog/ -> `$ sudo nano catalog.wsgi`
 
 Add text to the file:
 
 ```
+#!/usr/bin/python
 import sys
+import logging
+logging.basicConfig(stream=sys.stderr)
 sys.path.insert(0, "/var/www/catalog/")
 
-from views import app as application
+from catalog import app as application
 application.secret_key = 'secret'
 ```
 
-Create Apache config file:
+#### Create Apache config file:
 
 `$ sudo nano /etc/apache2/sites-available/catalog.conf`
 
@@ -255,8 +266,8 @@ Add text:
 
 ```
 <VirtualHost *:80>
-  ServerName http://ec2-18-130-76-28.eu-west-2.compute.amazonaws.com/
-  ServerAlias 18.130.76.28
+  ServerName udacity-linux-configuration
+  ServerAdmin admin@18.130.170.135
   WSGIScriptAlias / /var/www/catalog/catalog.wsgi
   <Directory /var/www/catalog/catalog/>
       Order allow,deny
@@ -268,6 +279,7 @@ Add text:
       Allow from all
   </Directory>
   ErrorLog ${APACHE_LOG_DIR}/error.log
+  LogLevel warn
   CustomLog ${APACHE_LOG_DIR}/access.log combined
 </VirtualHost>
 ```
@@ -278,7 +290,7 @@ Enable host:
 
 Restart apache:
 
-`$ sudo apache2ctl restart`
+`$ sudo service apache2 restart`
 
 
 To make .git directory not publicly accessible, put this in an .htaccess file at the root of your web server.
@@ -289,13 +301,13 @@ To make .git directory not publicly accessible, put this in an .htaccess file at
 ### Resources:
 
 [http://httpd.apache.org/docs/current/mod/core.html#virtualhost](http://httpd.apache.org/docs/current/mod/core.html#virtualhost/)
-[https://www.digitalocean.com/community/tutorials/how-to-deploy-a-flask-application-on-an-ubuntu-vps](https://www.digitalocean.com/community/tutorials/how-to-deploy-a-flask-application-on-an-ubuntu-vps)
+[how-to-deploy-a-flask-application-on-an-ubuntu-vps](https://www.digitalocean.com/community/tutorials/how-to-deploy-a-flask-application-on-an-ubuntu-vps)
 [Deploying python Flask web app on Amazon Lightsail](https://hk.saowen.com/a/0a0048ca7141440d0553425e8df46b16cdf4c13f50df4c5888256393d34bb1b9)
 [Make .git directory web inaccessible](https://stackoverflow.com/questions/6142437/make-git-directory-web-inaccessible)
 [Python locale error: unsupported locale setting
 ](https://stackoverflow.com/questions/14547631/python-locale-error-unsupported-locale-setting)
 [How To Install and Use PostgreSQL on Ubuntu 16.04](https://www.digitalocean.com/community/tutorials/how-to-install-and-use-postgresql-on-ubuntu-16-04)
 [The pg_hba.conf File](https://www.postgresql.org/docs/9.5/static/auth-pg-hba-conf.html)
-
+[give-all-the-permissions-to-a-user-on-a-db](https://stackoverflow.com/questions/22483555/give-all-the-permissions-to-a-user-on-a-db)
 
 
