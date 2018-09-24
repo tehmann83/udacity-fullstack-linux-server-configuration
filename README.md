@@ -6,7 +6,7 @@ IP address: 18.130.76.28
 
 SSH Port: 2200
 
-URL: [ec2-18-130-76-28.eu-west-2.compute-amazonaws.com](ec2-18-130-76-28.eu-west-2.compute-amazonaws.com)
+URL: [ec2-18-130-76-28.eu-west-2.compute-amazonaws.com](http://ec2-18-130-76-28.eu-west-2.compute-amazonaws.com)
 
 username/password for udacity reviewer: grader/grader
 
