@@ -266,7 +266,7 @@ Add text:
 
 ```
 <VirtualHost *:80>
-  ServerName udacity-linux-configuration
+  ServerName 18.130.170.135
   ServerAdmin admin@18.130.170.135
   WSGIScriptAlias / /var/www/catalog/catalog.wsgi
   <Directory /var/www/catalog/catalog/>
