@@ -2,7 +2,7 @@
 
 ## Server 
 
-IP address: 
+IP address: 18.130.76.28
 SSH Port: 2200
 
 username/password for udacity reviewer: grader/grader
@@ -220,7 +220,14 @@ From `/var/www/catalog/catalog`:
 `$ sudo pip install psycopg2`
 
 
+Change in `views.py`: 
+```
+if __name__ == '__main__':
+  app.run()
+```
 
+Change in `database_setup.py` and in `dummy-db.py`:
+Exchange `sqlite:///usersCatalog.db` with `postgresql://catalog:password@localhost/catalog`
 
 
 Create a WSGI file:
