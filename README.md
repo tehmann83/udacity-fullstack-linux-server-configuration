@@ -149,10 +149,12 @@ Remote connections should not be allowed:
 
 Check `$ sudo cat /etc/postgresql/9.5/main/pg_hba.conf`. Near the bottom you should find these lines:
 
-```local   all             postgres                                peer
+```
+local   all             postgres                                peer
 local   all             all                                     peer
 host    all             all             127.0.0.1/32            md5
-host    all             all             ::1/128                 md5```
+host    all             all             ::1/128                 md5
+```
 
 
 12. Install git
