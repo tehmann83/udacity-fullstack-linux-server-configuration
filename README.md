@@ -34,10 +34,22 @@ SSH into server with `$ ssh -i ~/.ssh/lightsail-key.pem ubuntu 18.130.170.135`
 `$ sudo apt-get update`
 `$ sudo apt-get upgrade`
 
+#### Update automatically
+
+`$ sudo apt-get install unattended-upgrades`
+`$ sudo dpkg-reconfigure --priority=low unattended-upgrades`
+
+[Ubuntu - AutomaticSecurityUpdates](https://help.ubuntu.com/community/AutomaticSecurityUpdates)
+
 
 #### 4. Change the SSH port from 22 to 2200. Make sure to configure the Lightsail firewall to allow it
 
-Open `$ sudo nano /etc/ssh/sshd_config` and change Port to 2200, save & exit.
+Open `$ sudo nano /etc/ssh/sshd_config` and 
+- change `Port` to `2200`,
+- change `PermitRootLogin` to `no`,
+- change `PasswordAuthentication` to `no`,
+- save & exit.
+
 
 `$ sudo service ssh restart`
 
@@ -252,11 +264,16 @@ Add text to the file:
 import sys
 import logging
 logging.basicConfig(stream=sys.stderr)
-sys.path.insert(0, "/var/www/catalog/")
+sys.path.insert(0, "/var/www/catalog/catalog")
 
-from catalog import app as application
+from views import app as application
 application.secret_key = 'secret'
 ```
+
+#### Change path of client secrets:
+
+In views.py change path to absolute path: `/var/www/catalog/catalog/client_secrets.json`
+
 
 #### Create Apache config file:
 
@@ -296,6 +313,11 @@ Restart apache:
 To make .git directory not publicly accessible, put this in an .htaccess file at the root of your web server.
 
 `RedirectMatch 404 /\.git`
+
+
+### Errors:
+
+To check for errors on apache server, go to `$ sudo tail /var/log/apache2/error.log`
 
 
 ### Resources:
